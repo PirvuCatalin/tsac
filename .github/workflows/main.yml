@@ -83,7 +83,7 @@ jobs:
       - name: Run JMeter Action on a test
         uses: rbhadti94/apache-jmeter-action@v0.5.0
         with:
-          testFilePath: ../../src/test/resources/jmeter/jmeter-tests.jmx
+          testFilePath: src/test/resources/jmeter/jmeter-tests.jmx
           outputReportsFolder: reports/
           args: "--loglevel INFO"
       - uses: actions/upload-artifact@v3

@@ -106,31 +106,9 @@
                             </execution>
                             <execution>
                                 <id>report</id>
-                                <phase>package</phase>
                                 <goals>
                                     <goal>report</goal>
                                 </goals>
-                            </execution>
-                            <execution>
-                                <id>jacoco-check</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <rule>
-                                            <element>BUNDLE</element>
-                                            <limits>
-                                                <limit>
-                                                    <counter>INSTRUCTION</counter>
-                                                    <value>COVEREDRATIO</value>
-                                                    <minimum>0.95</minimum>
-                                                </limit>
-                                            </limits>
-                                        </rule>
-                                    </rules>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -140,7 +118,6 @@
                         <version>3.8.0.2131</version>
                         <executions>
                             <execution>
-                                <phase>package</phase>
                                 <goals>
                                     <goal>sonar</goal>
                                 </goals>

@@ -1,6 +1,9 @@
-name: Tsac Spring CI
+name: Tsac Spring CI develop
 
-on: [push]
+on:
+  push:
+    branches:
+      - develop
 
 jobs:
   build-test-generate:

@@ -1,0 +1,49 @@
+name: Tsac Spring CI Main push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-test-generate:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of the branch is ${{ github.ref }} and the repository is ${{ github.repository }}."
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "🖥️ The workflow is now setting up the environment."
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - run: echo "🖥️ The workflow is now building the app."
+      - name: Build with Maven
+        run: mvn --batch-mode --update-snapshots package
+      - run: echo "🧪 The workflow is now testing the app."
+      - name: Test with Maven
+        run: mvn --batch-mode --update-snapshots test
+      - run: echo "👩🏽‍💻 The workflow is now generating the jar."
+      - run: mvn --batch-mode --update-snapshots install
+      - run: echo "💾 The workflow is now saving the jar."
+      - run: mkdir staging && cp target/*.jar staging
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Package
+          path: staging
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "tsac-app"
+          heroku_email: "cata_998@yahoo.com"
+          buildpack: "https://github.com/heroku/heroku-buildpack-java"

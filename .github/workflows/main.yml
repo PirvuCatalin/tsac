@@ -38,6 +38,7 @@ jobs:
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
   deploy:
+    needs: build-test-generate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

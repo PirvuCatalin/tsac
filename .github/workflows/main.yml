@@ -80,13 +80,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Run JMeter Action on a test
+      - name: Test request to see if app is up and running
+        id: testRequest
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: "https://tsac-app.herokuapp.com/getRandomNumber"
+      - name: App is running!
+        run: |
+          echo "App is running sucessfully. Got a random number: ${{ steps.testRequest.outputs.response }}."
+      - name: Run JMeter performance tests
         uses: rbhadti94/apache-jmeter-action@v0.5.0
         with:
           testFilePath: src/test/resources/jmeter/jmeter-tests.jmx
           outputReportsFolder: reports/
           args: "--loglevel INFO"
       - uses: actions/upload-artifact@v3
+        name: Save JMeter tests results
         with:
           name: jmeter-test-results
           path: reports/

@@ -3,9 +3,8 @@ name: Tsac Spring CI
 on: [push]
 
 jobs:
-  build:
+  build-test-generate:
     runs-on: ubuntu-latest
-
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -22,4 +21,15 @@ jobs:
       - run: echo "🖥️ The workflow is now building the app."
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots package
+      - run: echo "🧪 The workflow is now testing the app."
+      - name: Test with Maven
+        run: mvn --batch-mode --update-snapshots test
+      - run: echo "👩🏽‍💻 The workflow is now generating the jar."
+      - run: mvn --batch-mode --update-snapshots install
+      - run: echo "💾 The workflow is now saving the jar."
+      - run: mkdir staging && cp target/*.jar staging
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Package
+          path: staging
       - run: echo "🍏 This job's status is ${{ job.status }}."

@@ -75,7 +75,7 @@ jobs:
           heroku_email: "cata_998@yahoo.com"
           buildpack: "https://github.com/heroku/heroku-buildpack-java"
 
-  performance-tests:
+  integration-tests:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
@@ -89,10 +89,27 @@ jobs:
       - name: App is running!
         run: |
           echo "App is running sucessfully. Got a random number: ${{ steps.testRequest.outputs.response }}."
-      - name: Run JMeter performance tests
+      - name: Run JMeter integrations tests
         uses: rbhadti94/apache-jmeter-action@v0.5.0
         with:
-          testFilePath: src/test/resources/jmeter/jmeter-tests.jmx
+          testFilePath: src/test/resources/jmeter/integration-tests.jmx
+          outputReportsFolder: reports/
+          args: "--loglevel INFO"
+      - uses: actions/upload-artifact@v3
+        name: Save JMeter tests results
+        with:
+          name: jmeter-test-results
+          path: reports/
+
+  performance-tests:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run JMeter integrations tests
+        uses: rbhadti94/apache-jmeter-action@v0.5.0
+        with:
+          testFilePath: src/test/resources/jmeter/performance-tests.jmx
           outputReportsFolder: reports/
           args: "--loglevel INFO"
       - uses: actions/upload-artifact@v3

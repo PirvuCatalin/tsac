@@ -18,7 +18,7 @@ using the following technologies:
    - Integration and Performance tests with jmeter that runs on the above application 
    (results are also available for download as an artifcat)
 
-Example of a workflow run at: https://github.com/PirvuCatalin/tsac/actions/runs/2400636587.
+Example of a workflow run at: https://github.com/PirvuCatalin/tsac/actions/runs/2400664772.
 <br>
 There you'll also find the Package artifact (which you can then use for running the app 
 locally `java -jar tsac-0.0.1-SNAPSHOT.jar` and oppening a browser at `localhost:8080`).

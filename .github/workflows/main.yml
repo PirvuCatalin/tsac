@@ -102,7 +102,7 @@ jobs:
           path: reports/
 
   performance-tests:
-    needs: deploy
+    needs: integration-tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

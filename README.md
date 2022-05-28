@@ -15,9 +15,16 @@ using the following technologies:
    - Package application (artifact is generated for local testing)
    - SonarCloud for code analysis (https://sonarcloud.io/summary/new_code?id=PirvuCatalin_tsac)
    - Heroku GitHub Action for automatically deploy at https://tsac-app.herokuapp.com
-   - Integration and Performance tests with jmeter that runs on the above application
+   - Integration and Performance tests with jmeter that runs on the above application 
+   (results are also available for download as an artifcat)
 
-Example of a workflow run at: https://github.com/PirvuCatalin/tsac/actions/runs/2400560256
+Example of a workflow run at: https://github.com/PirvuCatalin/tsac/actions/runs/2400636587.
+<br>
+There you'll also find the Package artifact (which you can then use for running the app 
+locally `java -jar tsac-0.0.1-SNAPSHOT.jar` and oppening a browser at `localhost:8080`).
+<br>
+Files `jmeter-integration-test-results` and `jmeter-performance-test-results` contain the test results. 
+The Apache JMeter Dashboard is available after oppening the `index.html` file.
 
 ### The name
 

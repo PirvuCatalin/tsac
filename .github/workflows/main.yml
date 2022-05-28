@@ -98,7 +98,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         name: Save JMeter tests results
         with:
-          name: jmeter-test-results
+          name: jmeter-integration-test-results
           path: reports/
 
   performance-tests:
@@ -115,5 +115,5 @@ jobs:
       - uses: actions/upload-artifact@v3
         name: Save JMeter tests results
         with:
-          name: jmeter-test-results
+          name: jmeter-performance-test-results
           path: reports/

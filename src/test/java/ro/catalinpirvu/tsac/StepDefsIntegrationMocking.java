@@ -1,5 +1,6 @@
 package ro.catalinpirvu.tsac;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -7,6 +8,10 @@ import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpResponse;
+import ro.catalinpirvu.tsac.model.Produs;
+
+import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -15,11 +20,6 @@ import static org.hamcrest.Matchers.*;
 @CucumberContextConfiguration
 @SpringBootTest(classes = TsacApplication.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class StepDefsIntegrationMocking extends SpringIntegrationMocking {
-
-    @When("^the client calls /baeldung$")
-    public void the_client_issues_POST_hello() throws Throwable {
-        executePost();
-    }
 
     @Given("^the client calls /hello$")
     public void the_client_issues_GET_hello() throws Throwable {
@@ -56,5 +56,75 @@ public class StepDefsIntegrationMocking extends SpringIntegrationMocking {
     @And("^the client receives an error message that the upperbound is not valid$")
     public void the_client_receives_an_error_message_that_upperbound_is_invalid() {
         assertThat(latestResponse.getBody(), equalTo("Upper bound must be a positive integer!"));
+    }
+
+    @When("^clientul cauta un produs cu numele (.*)$")
+    public void clientul_cauta_un_produs_dupa_nume(String nume) {
+        executeGet("http://localhost:8080/produse/cauta-produs?nume=" + nume);
+    }
+
+    @When("^clientul creeaza un produs cu numele '(.*)' si costul '([\\d\\.]+)'$")
+    public void clientul_creaaza_un_produs_cu_nume_si_cost(String nume, Float cost) throws IOException {
+        executePost(String.format("http://localhost:8080/produse/creeaza-produs?nume=%s&cost=%f", nume, cost));
+    }
+
+    @When("^clientul sterge un produs cu numele '(.*)'$")
+    public void clientul_sterge_un_produs_cu_numele(String nume) throws IOException {
+        executePost(String.format("http://localhost:8080/produse/sterge-produs?nume=%s", nume));
+    }
+
+    @And("^clientul va primi un produs cu numele '(.*)' si costul '([\\d\\.]+)'$")
+    public void clientul_primeste_un_produs_cu_nume_si_cost(String nume, Float cost) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        Produs produs = mapper.readValue( latestResponse.getBody(), Produs.class);
+        assertThat(produs.getCost(), is(cost));
+        assertThat(produs.getNume(), is(nume));
+    }
+
+    @When("^clientul cere costul total as cosului de cumparaturi$")
+    public void clientul_cere_costul_total_al_cosului_de_cumparaturi() {
+        executeGet("http://localhost:8080/cos-de-cumparaturi/cost-total");
+    }
+
+    @When("^clientul cere componenta cosului de cumparaturi$")
+    public void clientul_cere_componenta_cosului_de_cumparaturi() {
+        executeGet("http://localhost:8080/cos-de-cumparaturi/componenta");
+    }
+
+    @When("^clientul scoate produsul (.*) din cosul de cumparaturi$")
+    public void clientul_scoate_produsul_din_cosul_de_cumparaturi(String nume) {
+        executeGet("http://localhost:8080/cos-de-cumparaturi/scoate-produs?nume=" + nume);
+    }
+
+    @When("^clientul adauga produsul (.*) cu cantitatea (.*) avand costul '(.*)' in cosul de cumparaturi$")
+    public void clientul_adauga_produsul_in_cosul_de_cumparaturi(String nume, Integer cantitate, Float cost) throws IOException {
+        executePost(String.format("http://localhost:8080/produse/creeaza-produs?nume=%s&cost=%f", nume, cost));
+        executePost(String.format("http://localhost:8080/cos-de-cumparaturi/adauga-produs?nume=%s&cantitate=%d", nume, cantitate));
+    }
+
+    @When("^clientul adauga produsul inexistent (.*) cu cantitatea (.*) in cosul de cumparaturi$")
+    public void clientul_adauga_produsul_inexistent_in_cosul_de_cumparaturi(String nume, Integer cantitate) throws IOException {
+        executePost(String.format("http://localhost:8080/cos-de-cumparaturi/adauga-produs?nume=%s&cantitate=%d", nume, cantitate));
+    }
+
+    @Then("^clientul va primi un code de stare egal cu (\\d+)$")
+    public void clientul_primeste_un_cod_de_stare(int statusCode) throws Throwable {
+        final HttpStatus currentStatusCode = latestResponse.getTheResponse().getStatusCode();
+        assertThat("status code is incorrect : " + latestResponse.getBody(), currentStatusCode.value(), is(statusCode));
+    }
+
+    @Then("^clientul va primi un cost total egal cu '(.*)'$")
+    public void clientul_primeste_un_cost_total(String costTotal) {
+        assertThat(latestResponse.getBody(), is(costTotal));
+    }
+
+    @Then("^clientul va primi o componenta goala$")
+    public void clientul_primeste_componenta_goala() {
+        assertThat(latestResponse.getBody(), is("{}"));
+    }
+
+    @And("^clientul va primi un mesaj ce contine '(.*)'$")
+    public void clinetul_primeste_mesaj_egal_cu(String mesaj) {
+        assertThat(latestResponse.getBody(), containsString(mesaj));
     }
 }

@@ -31,9 +31,8 @@ public class SpringIntegrationMocking {
         });
     }
 
-    void executePost() throws IOException {
+    void executePost(String url) throws IOException {
         final Map<String, String> headers = new HashMap<>();
-        headers.put("Accept", "application/json");
         final HeaderSettingRequestCallback requestCallback = new HeaderSettingRequestCallback(headers);
         final ResponseResultErrorHandler errorHandler = new ResponseResultErrorHandler();
 
@@ -42,7 +41,7 @@ public class SpringIntegrationMocking {
         }
 
         restTemplate.setErrorHandler(errorHandler);
-        latestResponse = restTemplate.execute("http://localhost:8080/baeldung", HttpMethod.POST, requestCallback, response -> {
+        latestResponse = restTemplate.execute(url, HttpMethod.POST, requestCallback, response -> {
             if (errorHandler.hadError) {
                 return (errorHandler.getResults());
             } else {

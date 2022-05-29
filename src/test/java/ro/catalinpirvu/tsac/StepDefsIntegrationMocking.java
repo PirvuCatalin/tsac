@@ -68,6 +68,11 @@ public class StepDefsIntegrationMocking extends SpringIntegrationMocking {
         executePost(String.format("http://localhost:8080/produse/creeaza-produs?nume=%s&cost=%f", nume, cost));
     }
 
+    @When("^clientul sterge un produs cu numele '(.*)'$")
+    public void clientul_sterge_un_produs_cu_numele(String nume) throws IOException {
+        executePost(String.format("http://localhost:8080/produse/sterge-produs?nume=%s", nume));
+    }
+
     @And("^clientul va primi un produs cu numele '(.*)' si costul '([\\d\\.]+)'$")
     public void clientul_primeste_un_produs_cu_nume_si_cost(String nume, Float cost) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -94,6 +99,11 @@ public class StepDefsIntegrationMocking extends SpringIntegrationMocking {
     @When("^clientul adauga produsul (.*) cu cantitatea (.*) avand costul '(.*)' in cosul de cumparaturi$")
     public void clientul_adauga_produsul_in_cosul_de_cumparaturi(String nume, Integer cantitate, Float cost) throws IOException {
         executePost(String.format("http://localhost:8080/produse/creeaza-produs?nume=%s&cost=%f", nume, cost));
+        executePost(String.format("http://localhost:8080/cos-de-cumparaturi/adauga-produs?nume=%s&cantitate=%d", nume, cantitate));
+    }
+
+    @When("^clientul adauga produsul inexistent (.*) cu cantitatea (.*) in cosul de cumparaturi$")
+    public void clientul_adauga_produsul_inexistent_in_cosul_de_cumparaturi(String nume, Integer cantitate) throws IOException {
         executePost(String.format("http://localhost:8080/cos-de-cumparaturi/adauga-produs?nume=%s&cantitate=%d", nume, cantitate));
     }
 

@@ -35,3 +35,7 @@ Feature: putem sa utilizal cosul de cumparaturi
     When clientul cere costul total as cosului de cumparaturi
     Then clientul va primi un code de stare egal cu 200
     And clientul va primi un cost total egal cu '14.0'
+  Scenario: clientul vrea sa adauge un produs inexistent in cosul de cumparaturi
+    When clientul adauga produsul inexistent test321123x cu cantitatea 10 in cosul de cumparaturi
+    Then clientul va primi un code de stare egal cu 400
+    And clientul va primi un mesaj ce contine 'Produsul nu a putut fi adaugat'

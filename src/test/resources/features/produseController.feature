@@ -19,3 +19,15 @@ Feature: putem crea si cauta produse
     When clientul cauta un produs cu numele test321y
     Then clientul va primi un code de stare egal cu 400
     And clientul va primi un mesaj ce contine 'Numele se refera la mai multe produse'
+  Scenario: clientul creaza un produs
+    When clientul creeaza un produs cu numele 'test123x123' si costul '222'
+    Then clientul va primi un code de stare egal cu 200
+    And clientul va primi un mesaj ce contine 'Produsul a fost creat'
+  Scenario: clientul sterge un produs
+    When clientul sterge un produs cu numele 'test123x123'
+    Then clientul va primi un code de stare egal cu 200
+    And clientul va primi un mesaj ce contine 'Produsul a fost sters'
+  Scenario: clientul vrea sa caute un produs sters
+    When clientul cauta un produs cu numele test123x123
+    Then clientul va primi un code de stare egal cu 400
+    And clientul va primi un mesaj ce contine 'Nu a putut fi gasit produsul cu acest nume'

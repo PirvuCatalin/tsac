@@ -6,6 +6,11 @@ The main idea behind the app is to show the different types
 of software testing and how important are them. The main goal
 was to implement any useful application and then to add the 
 necessary tests (mainly unit tests).
+<br>
+The apps main purpose is to generate a random number which can be seen in the Swagger UI.
+
+*Note: the latest version of the app contains a new shopping cart functionality, written
+fully in Romanian. To see the previous version, check https://github.com/PirvuCatalin/tsac/tree/tsac-v1.0.*
 
 In the meantime, the app was transformed so that now it's 
 using the following technologies:
